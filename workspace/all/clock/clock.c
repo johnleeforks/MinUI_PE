@@ -57,7 +57,7 @@ int main(int argc , char* argv[]) {
 	int show_24hour = exists(USERDATA_PATH "/show_24hour");
 	
 	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
+	struct tm tm = *gmtime(&t);
 	
 	int32_t day_selected = tm.tm_mday;
 	int32_t month_selected = tm.tm_mon + 1;
