@@ -32,12 +32,18 @@ keymon.elf &
 
 #######################################
 
-# init datetime
-if [ -f "$DATETIME_PATH" ]; then
-	DATETIME=`cat "$DATETIME_PATH"`
-	date +'%F %T' -s "$DATETIME"
-	DATETIME=`date +'%s'`
-	date -u -s "@$DATETIME"
+# Try to read from hardware RTC first, fall back to file if not available
+if [ -e /dev/rtc0 ]; then
+    # Use hwclock to set the system time from RTC
+    hwclock -s
+else
+    # Fall back to the file-based approach
+    if [ -f "$DATETIME_PATH" ]; then
+        DATETIME=`cat "$DATETIME_PATH"`
+        date +'%F %T' -s "$DATETIME"
+        DATETIME=`date +'%s'`
+        date -u -s "@$DATETIME"
+    fi
 fi
 
 #######################################
